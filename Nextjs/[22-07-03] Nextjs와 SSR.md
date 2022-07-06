@@ -34,12 +34,14 @@ SPA에서 언급하는 렌더링 이전에 좀 더 기초적인 렌더링 개념
 - FCP/FP (First Contentful Paint, 컨텐츠 표시 시점): 하얀 화면이 아닌 뭔가 보이긴 하는 시점이라는 의미. 유저들이 페이지를 마주치자마자 다른 상호작용을 trigger하지 않는다는 가정하에, 이 지표가 저조하다면 가장 큰 불편함을 초래함. UX관점에서 SSR이 좋은 이유 중 하나.
 - TTI (Time To Interactive, 페이지 상호작용): 페이지가 상호작용 가능하게 될 때까지의 시간(이벤트 발생 등). 이 지표가 저조하다면 클릭을 해도 반응이 없는 상황이 발생.
 
-### Hydration
+하지만 React, Vue같은 SPA의 등장 이후 렌더링이란 JS 코드화 된 DOM요소를 로드하는 과정의 의미가 포함되었다.
 
-웹 페이지를 렌더링하는 과정에서 React같은 CSR 라이브러리는 번들, 청크된 js파일들을 가져와 DOM을 렌더링한다.
+![CSR](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/CSR.png "CSR")
+![SSR](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/SSR.png "SSR")
 
-웹페이지가 그려지는 순서는 HTML CSS
-![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
+SPA의 개념에서의 렌더링에도 TTFB, FCP, TTI등은 중요한 지표가 된다.
+
+### Server Rendering vs Static Rendering
 
 ![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
 
