@@ -31,8 +31,10 @@ SPA에서 언급하는 렌더링 이전에 좀 더 기초적인 렌더링 개념
 - TTFB(Time To First Byte, 첫 번째 바이트까지의 시간):  
   링크를 클릭한 후 처음으로 들어오는 콘텐츠 비트 사이의 시간을 나타낸다.  
   이 수치는 서버의 성능을 나타내는 수치라고도 여겨질 수 있으며, SEO에도 영향을 준다.
-- FCP/FP (First Contentful Paint, 컨텐츠 표시 시점): 하얀 화면이 아닌 뭔가 보이긴 하는 시점이라는 의미. 유저들이 페이지를 마주치자마자 다른 상호작용을 trigger하지 않는다는 가정하에, 이 지표가 저조하다면 가장 큰 불편함을 초래함. UX관점에서 SSR이 좋은 이유 중 하나.
-- TTI (Time To Interactive, 페이지 상호작용): 페이지가 상호작용 가능하게 될 때까지의 시간(이벤트 발생 등). 이 지표가 저조하다면 클릭을 해도 반응이 없는 상황이 발생.
+- FCP/FP (First Contentful Paint, 컨텐츠 표시 시점):  
+  하얀 화면이 아닌 뭔가 보이긴 하는 시점이라는 의미. 유저들이 페이지를 마주치자마자 다른 상호작용을 trigger하지 않는다는 가정하에, 이 지표가 저조하다면 가장 큰 불편함을 초래함. UX관점에서 SSR이 좋은 이유 중 하나.
+- TTI (Time To Interactive, 페이지 상호작용):  
+  페이지가 상호작용 가능하게 될 때까지의 시간(이벤트 발생 등). 이 지표가 저조하다면 클릭을 해도 반응이 없는 상황이 발생.
 
 하지만 React, Vue같은 SPA의 등장 이후 렌더링이란 JS 코드화 된 DOM요소를 로드하는 과정의 의미가 포함되었다.
 
@@ -44,6 +46,25 @@ SPA의 개념에서의 렌더링에도 TTFB, FCP, TTI등은 중요한 지표가 
 ### Server Rendering vs Static Rendering
 
 ![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
+
+### 리하이드레이팅
+
+### SEO 고려사항
+
+[기본 용어 설명]
+Rendering
+
+- SSR(Server Side Rendering): Client side 혹은 범용 application을 서버에서 HTML로 rendering 하는 방식.
+- CSR(Client-Side Rendering): Browser에서 DOM을 사용해서 Application을 rendering 하는 방식.
+- Rehydration: Server에서 rendering 한 HTML DOM 트리와 data를 client에서 재사용하도록 JavaScript 뷰를 부팅하는 과정.
+- Prerendering: Build 시에 client-side application을 실행해서 초기 상태를 static HTML로 저장 하는 방식.
+
+Performance
+
+- TTFB(Time To First Byte): 링크를 클릭했을 때와 해당 링크 contents의 첫 번째 bit가 들어왔을 때 사이의 시간.
+- FP(First Paint): 사용자가 첫 번째 pixel을 볼 수 있는 시간.
+- FCP(First Contentful Paint): Article body 같은 요청한 내용이 보이는 시간.
+- TTI(Time To Interactive): Page가 interactive(event 연결 등) 하게 된 시간.
 
 [Reference]
 
