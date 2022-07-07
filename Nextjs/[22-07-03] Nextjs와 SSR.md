@@ -84,22 +84,29 @@ veiw에 DOM이 그려지고, JS신호가 도착하고 실행하면서 리액트�
 Server Rendering은 요청된 페이지에 대한 전체 HTML파일을 서버측에서 생성한다.  
 browser에 전달되기 전에 페이지를를 모두 제작하기 때문에, client-side에서 data를 가져오거나 추가적인 round-trip이 발생하지 않는다.
 
-SR(Server Rendering)에서는 일반적으로 FP(First Paint)와 FCP(First Contentful Paint)가 빠르다.  
+![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
+
+Server Rendering에서는 일반적으로 FP(First Paint)와 FCP(First Contentful Paint)가 빠르다.  
 페이지의 렌더링과 로직 연결을 서버에서 제작하므로 client측에 많은 연산을 요청하지 않게 된다.
 이 덕에 빠른 TTI(Time to Interactive)를 얻을 수 있는 장점이 있다.
 JS로 인해 생기는 로딩의 영향이 매우 낮아지며 First-party JS cost가 줄어들기 때문에 클라이언트 측에서 더 많은 여유 자원을 사용할 수 있게 되지만,  
 서버에서 모든 HTML을 만들어 보내다 보니 TTFB(Time to First Byte)가 느려질 수 있다는 단점이 생긴다. 따라서 SEO에 악영향을 끼칠 수 있다.
 
-SR은 서비스가 오직 text와 link로만 이루어진 페이지에 적절하다. 거의 모든 장치 및 네트워크 상태에서 잘 작동하며, streaming document parsing 같은 브라우저 최적화에 활용할 베이스가 될 수 있다.
+Server Rendering은 서비스가 오직 text와 link로만 이루어진 페이지에 적절하다. 거의 모든 장치 및 네트워크 상태에서 잘 작동하며, streaming document parsing 같은 브라우저 최적화에 활용할 베이스가 될 수 있다.
 
-Server rendering과 client rendering 사이에서 어떤 방식이 올바른 application 방식이냐에 대한 오랜 논쟁이 있었고, 결론은 항상 같았다. '반영하고자 하는 페이지에 적합한 기술을 사용할 것' 그리고 이 해답은 hybrid rendering을 통해 이를 선택적으로 변경할 수 있다.  
+Server Rendering과 client rendering 사이에서 어떤 방식이 올바른 application 방식이냐에 대한 오랜 논쟁이 있었고, 결론은 항상 같았다. '반영하고자 하는 페이지에 적합한 기술을 사용할 것' 그리고 이 해답은 hybrid rendering을 통해 이를 선택적으로 변경할 수 있다.  
 Netflix는 비교적 정적인 page는 server rendering을 사용하고, 많은 상호작용이 많이 필요한 page에서는 JS를 prefetch하여 많은 client rendering이 필요한 page가 빨리 loading 되도록 제작되었다.
 
 React나 React베이스의 Nextjs 등 인기있는 솔루션들은 hydration기법을 이용해 SSR과 CSR의 장점을 혼합한 형태로 서비스를 제공하므로 그 특징을 이해하고 잘 사용할 줄 알아야 한다.
 
-![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
-
 ### Static Rendering
+
+Static rendering은 build 시에 일어나며, 빠른 FP(First Paint), FCP(First Contentful Paint), TTI(Time To Interactive)를 제공한다.  
+Static Rendering은 각 URL에 대한 HTML 파일을 미리 생성해 놓기 때문에,
+Server rendering과는 다르게, page의 HTML을 즉석에서 생성 할 필요가 없으며 일관성 있게 빠른 TTFB(Time To First Byte)를 얻을 수 있다.  
+Response인 HTML을 미리 생성해 놓으면, static render는 여러 CDN에 배포함으로써 edge-caching의 이점을 가져갈 수 있습니다.
+
+![Static Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/static+rendering.png "Static Rendering")
 
 ### SEO 고려사항
 
