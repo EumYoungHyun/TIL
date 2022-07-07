@@ -43,11 +43,54 @@ SPA에서 언급하는 렌더링 이전에 좀 더 기초적인 렌더링 개념
 
 SPA의 개념에서의 렌더링에도 TTFB, FCP, TTI등은 중요한 지표가 된다.
 
+### hydrate (수화)
+
+수화란 직역하면 몸에 물을 보충하는 것을 뜻한다.  
+리액트에서 기본적으로 사용되는 render메소드는 DOM에 리액트 컴포넌트를 렌더링 하는 메소드이다.
+
+```javascript
+ReactDOM.render(element, container[, callback])
+```
+
+render메소드에 추가된 매개변수들 container DOM에 element를 렌더링 작업을 진행한다. 이 과정에서 container의 children으로 element를 넣어주는데 기존에 렌더링이 되어있다면 렌더링은 건너뛰고 업데이트만 진행하게 된다. 마지막으로 이 과정들이 완료되고 난 후 콜백 함수를 실행하며 함수가 종료된다.  
+이를 한 문장으로 정리한다면
+
+> ReactDom의 render메소드는 컴포넌트를 렌더링한 후에 콜백을 실행한다.
+
+그리고 React는 render와 비슷한 hydrate라는 메소드도 제공한다  
+hydrate는 render메소드와 동일한 매개변수를 수용한다.  
+하지만 render와는 다르게 렌더링은 하지 않고 이벤트 핸들러만 붙여주는 역할을 한다.
+
+```javascript
+ReactDOM.hydrate(element, container[, callback])
+```
+
+SSR을 하는 경우에는 hydrate로 콜백만 붙여야 한다.  
+SSR을 거쳐 이미 마크업이 채워져있는 경우에는 render를 사용하지 않고 hydrate를 이용해 성능적 손해를 피할 수 있다.
+
+이를 웹을 렌더링하는 동작과정으로 분할해 보면 이해하기 쉽다.
+
+![Rehydration](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/rehydration.png "Rehydration")
+
 ### Server Rendering vs Static Rendering
 
-![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
+Server Rendering은 요청된 페이지에 대한 전체 HTML파일을 서버측에서 생성한다.  
+browser에 전달되기 전에 페이지를를 모두 제작하기 때문에, client-side에서 data를 가져오거나 추가적인 round-trip이 발생하지 않는다.
 
-### 리하이드레이팅
+SR(Server Rendering)에서는 일반적으로 FP(First Paint)와 FCP(First Contentful Paint)가 빠르다.  
+페이지의 렌더링과 로직 연결을 서버에서 제작하므로 client측에 많은 연산을 요청하지 않게 된다.
+이 덕에 빠른 TTI(Time to Interactive)를 얻을 수 있는 장점이 있다.
+JS로 인해 생기는 로딩의 영향이 매우 낮아지며 First-party JS cost가 줄어들기 때문에 클라이언트 측에서 더 많은 여유 자원을 사용할 수 있게 되지만,  
+서버에서 모든 HTML을 만들어 보내다 보니 TTFB(Time to First Byte)가 느려질 수 있다는 단점이 생긴다. 따라서 SEO에 악영향을 끼칠 수 있다.
+
+SR은 서비스가 오직 text와 link로만 이루어진 페이지에 적절하다. 거의 모든 장치 및 네트워크 상태에서 잘 작동하며, streaming document parsing 같은 브라우저 최적화에 활용할 베이스가 될 수 있다.
+
+Server rendering과 client rendering 사이에서 어떤 방식이 올바른 application 방식이냐에 대한 오랜 논쟁이 있었고, 결론은 항상 같았다. '반영하고자 하는 페이지에 적합한 기술을 사용할 것' 그리고 이 해답은 hybrid rendering을 통해 이를 선택적으로 변경할 수 있다.  
+Netflix는 비교적 정적인 page는 server rendering을 사용하고, 많은 상호작용이 많이 필요한 page에서는 JS를 prefetch하여 많은 client rendering이 필요한 page가 빨리 loading 되도록 제작되었다.
+
+React나 React베이스의 Nextjs 등 인기있는 솔루션들은 hydration기법을 이용해 SSR과 CSR의 장점을 혼합한 형태로 서비스를 제공하므로 그 특징을 이해하고 잘 사용할 줄 알아야 한다.
+
+![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
 
 ### SEO 고려사항
 
@@ -72,3 +115,4 @@ Performance
 2. https://velog.io/@huurray/React-Hydration-%EC%97%90-%EB%8C%80%ED%95%98%EC%97%AC
 3. https://shlrur.github.io/develog/2019/02/14/rendering-on-the-web/
 4. https://tech.junhabaek.net/%EC%9B%B9-%EB%A0%8C%EB%8D%94%EB%A7%81%EC%9D%98-%EC%9C%A0%ED%98%95-1-only-ssr-static-ssr-b10c3916fb09
+5. https://simsimjae.tistory.com/389
