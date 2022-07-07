@@ -68,11 +68,18 @@ ReactDOM.hydrate(element, container[, callback])
 SSR을 하는 경우에는 hydrate로 콜백만 붙여야 한다.  
 SSR을 거쳐 이미 마크업이 채워져있는 경우에는 render를 사용하지 않고 hydrate를 이용해 성능적 손해를 피할 수 있다.
 
-이를 웹을 렌더링하는 동작과정으로 분할해 보면 이해하기 쉽다.
+웹 페이지를 요청하는 순간부터 사용자에게 도착하는 과정을 보면 Rehydration의 과정을 더 쉽게 이해할 수 있다.
 
 ![Rehydration](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/rehydration.png "Rehydration")
 
-### Server Rendering vs Static Rendering
+최초의 웹 페이지 요청 이후 서버는 HTML을 반환해준다.  
+이때 반환해주는 HTML은 Dehydrate된 (인터렉션이 안되는) DOM이다.  
+veiw에 DOM이 그려지고, JS신호가 도착하고 실행하면서 리액트가 정적인 HTML과 store를 동적인 리액트 컴포넌트 트리와 store로 변환하는 과정이 일어나는데, 이걸 (Re)hydrate라고 한다.  
+이때 hydrate 대신 render를 사용하면 화면을 다시 그리는 상황이 초래된다. SSR으로 웹을 제작할때 이 점을 주의하며 코딩을 해야 한다.
+
+> 리액트에서 서버사이드 렌더링으로 만들어진 수분이 없는 정적인 HTML과 State로부터 수분을 보충하는 과정(동적인 상태로 변화)인 hydrate가 일어난다.
+
+### Server Rendering
 
 Server Rendering은 요청된 페이지에 대한 전체 HTML파일을 서버측에서 생성한다.  
 browser에 전달되기 전에 페이지를를 모두 제작하기 때문에, client-side에서 data를 가져오거나 추가적인 round-trip이 발생하지 않는다.
@@ -91,6 +98,8 @@ Netflix는 비교적 정적인 page는 server rendering을 사용하고, 많은 
 React나 React베이스의 Nextjs 등 인기있는 솔루션들은 hydration기법을 이용해 SSR과 CSR의 장점을 혼합한 형태로 서비스를 제공하므로 그 특징을 이해하고 잘 사용할 줄 알아야 한다.
 
 ![Server Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering.png "Server Rendering")
+
+### Static Rendering
 
 ### SEO 고려사항
 
