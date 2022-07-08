@@ -38,9 +38,6 @@ SPA에서 언급하는 렌더링 이전에 좀 더 기초적인 렌더링 개념
 
 하지만 React, Vue같은 SPA의 등장 이후 렌더링이란 JS 코드화 된 DOM요소를 로드하는 과정의 의미가 포함되었다.
 
-![CSR](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/CSR.png "CSR")
-![SSR](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/SSR.png "SSR")
-
 SPA의 개념에서의 렌더링에도 TTFB, FCP, TTI등은 중요한 지표가 된다.
 
 ### hydrate (수화)
@@ -75,7 +72,7 @@ SSR을 거쳐 이미 마크업이 채워져있는 경우에는 render를 사용�
 최초의 웹 페이지 요청 이후 서버는 HTML을 반환해준다.  
 이때 반환해주는 HTML은 Dehydrate된 (인터렉션이 안되는) DOM이다.  
 veiw에 DOM이 그려지고, JS신호가 도착하고 실행하면서 리액트가 정적인 HTML과 store를 동적인 리액트 컴포넌트 트리와 store로 변환하는 과정이 일어나는데, 이걸 (Re)hydrate라고 한다.  
-이때 hydrate 대신 render를 사용하면 화면을 다시 그리는 상황이 초래된다. SSR으로 웹을 제작할때 이 점을 주의하며 코딩을 해야 한다.
+이때 구현된 로직에 따라 웹을 두번 그리게 되는 비효율을 경험하게 된다.
 
 > 리액트에서 서버사이드 렌더링으로 만들어진 수분이 없는 정적인 HTML과 State로부터 수분을 보충하는 과정(동적인 상태로 변화)인 hydrate가 일어난다.
 
@@ -122,6 +119,36 @@ Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 요청시 �
 이를 보완하기 위해 server rendering + HTML caching 으로 server render time을 줄이는 방법이 있다.  
 server rendering의 장점은 static rendering보다 좀 더 “live” 한 data를 사용하여 좀 더 완벽한 응답을 만든다는 점이다.  
 즉, static rendering으로 개인화가 필요한 page를 만들기 쉽지 않다.
+
+### Client Side Rendering (CSR)
+
+CSR(Client Side Rendering)은 브라우저에서 JavaScript를 사용해서 바로 페이지를 렌더링 하는 방식을 뜻한다.  
+모든 로직, 데이터 페칭, 드로잉과 라우팅들이 모두 client에서 처리된다.  
+CSR은 클라이언트 측 성능이 중요하므로, 모바일 환경에서 비교적 불리한 특징을 지니고 있다.  
+이론적으로 JS 작업을 최소화 하고 RTD(Round Time Delay)를 최소화 한다면 Server Rendering 성능과 비슷해 질 수 있다.  
+JS와 데이터를 HTTP/2 Server Push나 <link rel=preload>를 통해서 더 빨리 전달될 수 있으며, 이는 parser를 통해서 더 빠르게 작동될 수 있다.  
+PRPL 패턴을 이용하면 FP(First Paint) 시간을 단축 시킬 수 있다.
+
+![CSR](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/CSR2.png "CSR")
+
+CSR에서 가장 중요한점은 웹이 커짐으로써 JS크기가 한 없이 커질 수 있다는 것이다.  
+이를 코드 스플리팅, 레이지로딩 등의 기술을 활용해 적극적으로 bundle의 크기를 줄이는 작업이 필요하다.
+
+### Rehydration을 이용해 server rendering 과 SPA을 결합
+
+Rehydration을 이용해 앞서 설명한 server rendering, static rendering과 CSR의 SPA개념을 적절히 혼합할 수 있다.  
+첫 접속이나 새로고침 같은 경우 server에서 HTML을 다운 받아 빠른 FCP와 더블어  
+rehydration으로 인터렉션을 연결하여 버튼 클릭 이벤트들이 정상 작동하도록 구현된다.  
+여기에는 확실한 단점 2가지가 거론되는데,
+
+1. FCP, FP가 개선됨에 따라 로딩은 빨라보이지만 TTI가 개선되지 않아 사용자에게 불쾌한 계곡을 제공할 수 있다. (화면상에는 버튼이 있지만 아무런 인터렉션이 걸리지 않은 상황), 기기의 성능이나 네트워크가 불안정 할 수 록 UX에 악영향을 미칠 수 있다는 뜻이다.
+2. Server Render와 Client Side Render, 두번의 렌더 과정을 거치는 비효율이 있다.
+
+![server rendering with CSR via rehydration](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/CSR2.png "server rendering with CSR via rehydration")
+
+FCP가 빠르지만 JS가 커질 수록 TTI가 미뤄지며 불쾌한 계곡의 기간은 길어진다.  
+다행히 Nextjs는 페이지별로 코드 스플리팅을 제공하며
+React 18에서는 Steaming Server Rendering (Suspense)를 지원해 점진적 렌더링의 구현이 가능해 질 수 있다. (22년 07월 08일 기준 SSR을 위한 Streaming server rendering은 아직 개발 중)
 
 ### SEO 고려사항
 
