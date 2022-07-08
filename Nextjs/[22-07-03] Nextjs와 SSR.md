@@ -104,9 +104,24 @@ React나 React베이스의 Nextjs 등 인기있는 솔루션들은 hydration기�
 Static rendering은 build 시에 일어나며, 빠른 FP(First Paint), FCP(First Contentful Paint), TTI(Time To Interactive)를 제공한다.  
 Static Rendering은 각 URL에 대한 HTML 파일을 미리 생성해 놓기 때문에,
 Server rendering과는 다르게, page의 HTML을 즉석에서 생성 할 필요가 없으며 일관성 있게 빠른 TTFB(Time To First Byte)를 얻을 수 있다.  
-Response인 HTML을 미리 생성해 놓으면, static render는 여러 CDN에 배포함으로써 edge-caching의 이점을 가져갈 수 있습니다.
+Response인 HTML을 미리 생성해 놓으면, static render는 여러 CDN에 배포함으로써 edge-caching의 이점을 가져갈 수 있다.
 
 ![Static Rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/static+rendering.png "Static Rendering")
+
+Static rendering는 가능한 모든 URL에 대해 HTML 파일들을 미리 만들어 놓아야 한다는 단점을 가지고 있다.  
+이는 URL이 무엇을 뜻하는지 예측하기 힘들거나 고유 페이지가 많은 site의 경우 여러 문제가 있을 수 있습니다.
+
+static rendering과 prerendering 사이의 차이를 이해하는 것이 중요하다.  
+Static rendering page는 client-side JS를 많이 실행하지 않아도 interactive한 반면, prerendering은 First Paint(FP) 혹은 SPA의 First Contentful Paint(FCP)를 향상시킵니다. Prerendering은 page가 interactive 할 수 있도록 content를 client-side에서 생성합니다.
+
+### Server Rendering vs Static Rendering
+
+Server Rendering은 Silver bullet이 아니다. 동적인 특성으로 인해 compute overhead가 발생하기 쉽고 많은 server rendering solution들은 일찍 flush하지 않으며 TTFB를 지연시키거나 전송하는 data에 대해 중복 요청을 할 수 있다. Server rendering을 올바르게 사용하기 위해서는 component caching, memory 사용량 관리, memoization 기법 적용 등등 적합한 방식을 찾거나 구축해야 합니다.
+
+Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 요청시 생성하므로 static rendering으로 생성된 contents를 제공하는 것보다 느리다.  
+이를 보완하기 위해 server rendering + HTML caching 으로 server render time을 줄이는 방법이 있다.  
+server rendering의 장점은 static rendering보다 좀 더 “live” 한 data를 사용하여 좀 더 완벽한 응답을 만든다는 점이다.  
+즉, static rendering으로 개인화가 필요한 page를 만들기 쉽지 않다.
 
 ### SEO 고려사항
 
@@ -132,3 +147,4 @@ Performance
 3. https://shlrur.github.io/develog/2019/02/14/rendering-on-the-web/
 4. https://tech.junhabaek.net/%EC%9B%B9-%EB%A0%8C%EB%8D%94%EB%A7%81%EC%9D%98-%EC%9C%A0%ED%98%95-1-only-ssr-static-ssr-b10c3916fb09
 5. https://simsimjae.tistory.com/389
+6. https://velog.io/@jwhan/%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EC%82%AC%EC%9D%B4%EB%93%9C-%EB%A0%8C%EB%8D%94%EB%A7%81CSR-%EC%84%9C%EB%B2%84-%EC%82%AC%EC%9D%B4%EB%93%9C-%EB%A0%8C%EB%8D%94%EB%A7%81SSR-%EC%A0%95%EC%A0%81-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EC%83%9D%EC%84%B1SSG-%EC%9D%98-%EC%A0%95%EC%9D%98%EC%99%80-%EC%9E%A5%EB%8B%A8%EC%A0%90
