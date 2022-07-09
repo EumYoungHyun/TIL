@@ -152,6 +152,13 @@ React 18에서는 Steaming Server Rendering (Suspense)를 지원해 점진적 �
 
 ### SEO 고려사항
 
+Cawler가 JS는 인식할 수는 있지만, JavaScript가 어떻게 rendering 하는지 모르는 경우가 있다.  
+Crawler 작업 중에 제대로 CSR을 할 수도 있지만, 항상 성공하는 것이 아니다.  
+최근에는 구글에서 Dynamic Rendering을 지원하지만 어느것이 더 성능이 좋은지는 알 수 없고 구글 한정이기 때문에 SSR을 사용하는것이 당연하게 사용되고 있다.  
+자신의 web page가 어떻게 보이는지 알고 싶은 경우, google의 모바일 친화성 테스트를 진행해보면 좋다.  
+https://search.google.com/test/mobile-friendly  
+이 test를 통해서 자신의 page가 Google crawler에 보이는 방식, 일련의 HTML content, 그리고 rendering 중 발생한 오류 등을 미리 볼 수 있다.
+
 [기본 용어 설명]
 Rendering
 
