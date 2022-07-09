@@ -144,7 +144,7 @@ rehydration으로 인터렉션을 연결하여 버튼 클릭 이벤트들이 정
 1. FCP, FP가 개선됨에 따라 로딩은 빨라보이지만 TTI가 개선되지 않아 사용자에게 불쾌한 계곡을 제공할 수 있다. (화면상에는 버튼이 있지만 아무런 인터렉션이 걸리지 않은 상황), 기기의 성능이나 네트워크가 불안정 할 수 록 UX에 악영향을 미칠 수 있다는 뜻이다.
 2. Server Render와 Client Side Render, 두번의 렌더 과정을 거치는 비효율이 있다.
 
-![server rendering with CSR via rehydration](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/CSR2.png "server rendering with CSR via rehydration")
+![server rendering with CSR via rehydration](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/server+rendering+with+client+side+renderingvia+rehydration.png "server rendering with CSR via rehydration")
 
 FCP가 빠르지만 JS가 커질 수록 TTI가 미뤄지며 불쾌한 계곡의 기간은 길어진다.  
 다행히 Nextjs는 페이지별로 코드 스플리팅을 제공하며
