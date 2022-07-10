@@ -65,6 +65,15 @@ lazy on load : 모든 데이터, 소스들을 호출한 후에 로드를 시작�
 
 웹 폰트의 경우에도 외부 API를 통해 다운받지 않고 빌딩시 추가될 수 있도록 \_document파일에서 설정할 수 있다.
 
+### fallback
+
+static 빌드시 fallback 설정을 통해 다양한 방식을 제공할 수 있다.  
+false: 지정되지 않은 path는 모두 404 페이지로
+true: 지정되지 않은 path도 404 전환 x
+'blocking': path는 빈배열로 전송(필수인지는 모르겠음)  
+dynamic url을 static으로서 제공할 수 있다. 첫 방문시 static file을 제작하고 이후 방문시에는 static 을 그대로 리턴함,
+지속적인 html제작으로 인한 용량 이슈 및 첫 방문시 성능 이슈를 확인해보아야 함.
+
 ![web fonts preload](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/web+font+ssr+preload.png "web fonts preload")
 
 1. https://nomadcoders.co/ - next js
