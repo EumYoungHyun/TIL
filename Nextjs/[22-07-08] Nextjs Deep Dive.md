@@ -35,6 +35,36 @@ export function middleware(req: NextRequest, event: NextFetchEvent) {
 
 ### dynamic import
 
+Next js를 통해 만들어진 웹을 다운로드 받을때  
+사용자가 특정 행동을 했을때만 실행되는 컴포넌트더라도 페이지에 import된 모든 항목을 처음 한번에 다운로드 하게 된다.
+
+```tsx
+import dynamic from "next/dynamic";
+
+const Card = dynamic(() => import("./Card"), { ssr: false });
+```
+
+option을 통해 외부 API처럼 불필요한 SSR에서의 호출을 무효화 시킬 수도 있다.
+
+![dynamic import](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/dynamic+import+network+check.png "dynamic import")
 [Reference]
+
+### Script and \_document
+
+SSR을 최적화 하여 사용하기
+외부 스크립트나 Web font같은 것들을 preload를 통해 build과정에서 추가할 수 있다. 이를 통해 크기가 큰 웹폰트나 외부 API 스크립트들을 따로 다운로드 받거나 헤더에 미리 추가하여 TTFB 시간을 획기적으로 단축할 수 있다.
+
+```tsx
+<Script src="some kakao api" strange="beforeInteractive or lazyOnLoad" />
+```
+
+외부 API의 경우 바퀴의 재발명을 피하기 위한 경우가 많기 때문에 무거운 경우가 대다수,  
+이를 굳이 처음부터 모두 로드할 필요는 없다. SSR의 경우 TTFB가 느려지는 이유가 되기도 함. 이를 Script strange로서 대처할 수 있다.
+beforeInteractive: 인터렉션 이전에 api를 호출 Map API등에 적합
+lazy on load : 모든 데이터, 소스들을 호출한 후에 로드를 시작함 페이스북 SDK같은 서비스에 적합
+
+웹 폰트의 경우에도 외부 API를 통해 다운받지 않고 빌딩시 추가될 수 있도록 \_document파일에서 설정할 수 있다.
+
+![web fonts preload](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/web+font+ssr+preload.png "web fonts preload")
 
 1. https://nomadcoders.co/ - next js
