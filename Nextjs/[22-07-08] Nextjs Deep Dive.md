@@ -55,7 +55,7 @@ SSR을 최적화 하여 사용하기
 외부 스크립트나 Web font같은 것들을 preload를 통해 build과정에서 추가할 수 있다. 이를 통해 크기가 큰 웹폰트나 외부 API 스크립트들을 따로 다운로드 받거나 헤더에 미리 추가하여 TTFB 시간을 획기적으로 단축할 수 있다.
 
 ```tsx
-<Script src="some kakao api" strange="beforeInteractive or lazyOnLoad" />
+<Script src="some kakao api" strategy="beforeInteractive or lazyOnLoad" />
 ```
 
 외부 API의 경우 바퀴의 재발명을 피하기 위한 경우가 많기 때문에 무거운 경우가 대다수,  
