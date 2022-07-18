@@ -1,0 +1,14 @@
+## Google SEO, 크롤링 및 색인전략
+
+Google 검색 및 기타 Google 서비스에서 콘텐츠를 표시하기 위해 콘텐츠를 찾고 파싱하는 방법과 파싱을 막는 방법에 대한 학습 및 설정 범위
+
+|주제|
+|---|---|
+|사이트맵|사이트의 새 페이지 또는 업데이트된 페이지에 대해 Google에 알림|
+|robot.txt|robot.txt파일은 검색엔진 크롤러에 크롤러가 사이트에 요청할 수 있거나 요청할 수 없는 페이지를 알림|
+|메타태그|Google에서는 검색노출 및 동작을 제어하는 여러 태그 확장을 지원|
+|크롤러 관리| 1. Google에 URL 재크롤링 요청 2.Googlebot 크롤링 속도 낮추기 3. Googlebot인지 확인 4. 크롤링 예산 관리를 위한 대규모 사이트 소유자 가이드 5. Google 크롤러|
+|삭제||1.Google과 공유하는 정보 관리하기 2.사이트에 호스팅된 페이지를 Google에서 삭제하기 3.페이지에 호스팅된 이미지가 검색결과에 표시되지 않도록 이미지 삭제 4.Search Console을 사용하여 Google 로컬 및 기타 Google서비스에 표시되지 않도록 설정하기|
+
+[Reference]
+1.https://developers.google.com/search/docs/advanced/crawling/overview?hl=ko
