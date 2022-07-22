@@ -112,4 +112,5 @@ window 객체를 확인할 수 없는 상황이라면 임시의 스토리지를 
 서버사이드렌더링의 경우 window 체크를 typeof window === null로 진행하면 된다.
 
 [Reference]
-https://radzion.com/blog/hook-storage
+1. https://radzion.com/blog/hook-storage
+2. https://nextjs.org/docs/messages/react-hydration-error
