@@ -46,3 +46,40 @@ https://levelup.gitconnected.com/react-code-conventions-and-best-practices-433e2
   ]
 }
 ```
+
+## 명명 규칙
+
+### 컴포넌트, 인터페이스, 타입 선언에서는 PascalCase를 사용
+
+```tsx
+// React component
+const BannersEditForm = () => {
+  ...
+}
+
+// Typescript interface
+interface TodoItem {
+  id: number;
+  name: string;
+  value: string;
+}
+
+// Typescript type alias
+type TodoList = TodoItem[];
+```
+
+### 변수, 배열, 객체, 함수 등 자바스크립트 데이터 타입에는 camelCase 사용
+
+```tsx
+const getLastDigit = () => { ... }
+
+const userTypes = [ ... ]
+```
+
+### 폴더와 컴포넌트 이외의 파일들에는 camelCase 사용, 컴포넌트 파일명은 PascalCase 사용
+
+```
+src/utils/form.ts
+src/hooks/useForm.ts
+src/components/banners/edit/Form.tsx
+```
