@@ -83,3 +83,52 @@ src/utils/form.ts
 src/hooks/useForm.ts
 src/components/banners/edit/Form.tsx
 ```
+
+### 배럴의 사용 or 모아서 관리
+
+배럴은 여러 모듈의 내보내기를 하나의 편리한 모듈로 롤업할 수 있음.
+
+공유 구성 요소, 유틸리티, 도우미 기능 등과 같은 엔터티에 적용, 작업을 더 쉽게 하기 위해 배럴을 사용하여 배럴을 자동 생성할 수 있다.
+
+```js
+// 일반적인 방법: index.js 이용
+export * from "./DropDown";
+export * from "./TextBox";
+export * from "./CheckBox";
+export * from "./DateTimePicker";
+export * from "./Slider";
+// or
+import { DropDown } from "./src/controls/DropDown";
+import { TextBox } from "./src/controls/TextBox";
+import { CheckBox } from "./src/controls/CheckBox";
+import { DateTimePicker } from "./src/controls/DateTimePicker";
+import { Slider } from "./src/controls/Slider";
+
+// 배럴:
+import {
+  DropDown,
+  TextBox,
+  CheckBox,
+  DateTimePicker,
+  Slider,
+} from "./src/controls";
+or;
+import * as Controls from "./src/controls/index";
+```
+
+### export default 자제
+
+export default는 export하는 항목과 사용하는 곳에서의 이름이 연결되지 않을 수 있다.
+이렇게 되면 유연성을 얻을 수 있지만 여러 개발자가 동일한 모듈을 다른 이름이나 비설명적인 이름으로 가져오면 문제가 발생하기 쉽다.
+
+명명된 export는 명시적이므로 소비자가 원래 작성자가 의도한 이름으로 가져오고 모호성을 제거해야 한다.
+
+```tsx
+// ❌
+export default MyComponent;
+
+// ✅
+export { MyComponent };
+export const MyComponent = ...;
+export type MyComponentType = ...;
+```
