@@ -180,7 +180,7 @@ function Component({ someProperty }: PropsWithChildren<ComponentProps>) {
 
   return (
     <div>
-      {/* 코드를 더 명확하게 하기 위해 동일한 라인에서 닫히는지를  구분. */}
+      {/* 코드를 더 명확하게 하기 위해 동일한 라인에서 닫히는 구조를 명확히 구분지어줄 것. */}
       {/* ❌ */}
       <div>
         <div>
@@ -237,4 +237,82 @@ function Component({ someProperty }: PropsWithChildren<ComponentProps>) {
 // 6. Exports
 export { Component };
 export type { ComponentProps };
+```
+
+### children을 추가할 땐 PropsWithChildren을 이용
+
+많은 효용가치가 있는지는 모르겠으나 좀 더 명시적으로 작성할 수 있음
+
+```tsx 
+import React, { PropsWithChildren } from "react";
+
+type ComponentProps = {
+  someProperty: string;
+};
+
+// ✅
+function Component({ someProperty, children }: PropsWithChildren<ComponentProps>) {
+  // ...
+}
+```
+
+### jsx, tsx내의 콜백함수가 1줄 이상이라면 함수로 분할
+
+```tsx
+// ❌
+<button
+  onClick={() => {
+    setState(!state);
+    resetForm();
+    reloadData();
+  }}
+/>
+
+// ✅
+<button onClick={() => setState(!state)} />
+
+// ✅
+const handleButtonClick = () => {
+  setState(!state);
+  resetForm();
+  reloadData();
+}
+
+<button onClick={handleButtonClick} />
+```
+
+### key prop으로 index를 사용하지 않을 것
+
+참고: https://medium.com/wesionary-team/using-index-as-a-key-is-an-anti-pattern-in-react-8e5db3aea3a9
+
+```tsx
+// ❌
+const List = () => {
+  const list = ["item1", "item2", "item3"];
+
+  return (
+    <ul>
+      {list.map((value, index) => {
+        return <li key={index}>{value}</li>;
+      })}
+    </ul>
+  );
+};
+
+// ✅
+const List = () => {
+  const list = [
+    { id: "111", value: "item1" },
+    { id: "222", value: "item2" },
+    { id: "333", value: "item3" }
+  ];
+
+  return (
+    <ul>
+      {list.map((item) => {
+        return <li key={item.id}>{item.value}</li>;
+      })}
+    </ul>
+  );
+};
 ```
