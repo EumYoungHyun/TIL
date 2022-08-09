@@ -132,3 +132,109 @@ export { MyComponent };
 export const MyComponent = ...;
 export type MyComponentType = ...;
 ```
+
+### 컴포넌트 구조 예시
+
+```tsx
+// 1. import 최소화룰 추구
+import React, { PropsWithChildren, useState, useEffect } from "react";
+
+// 2. Types
+type ComponentProps = {
+  someProperty: string;
+};
+
+// 3. Styles  - css in js
+//   but 성능 저하 이슈 고민
+const Wrapper = styled("div")(({ theme }) => ({
+  color: theme.palette.white,
+}));
+
+// 4. constant 관리
+const SOME_CONSTANT = "something";
+
+// 5. Component
+function Component({ someProperty }: PropsWithChildren<ComponentProps>) {
+  // 5.1 선언부
+  const [state, setState] = useState(true);
+  const { something } = useSomething();
+
+  // 5.2 함수부
+  function handleToggleState() {
+    setState(!state);
+  }
+
+  // 5.3 useEffect
+  // ❌
+  React.useEffect(() => {
+    // ...
+  }, []);
+
+  // ✅
+  useEffect(() => {
+    // ...
+  }, []);
+
+  // 5.5 추가사항
+  const { property } = something;
+
+  return (
+    <div>
+      {/* 코드를 더 명확하게 하기 위해 동일한 라인에서 닫히는지를  구분. */}
+      {/* ❌ */}
+      <div>
+        <div>
+          <p>Lorem ipsum</p>
+          <p>Pellentesque arcu</p>
+        </div>
+        <p>Lorem ipsum</p>
+        <p>Pellentesque arcu</p>
+      </div>
+      <div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque
+          arcu. Et harum quidem rerum facilis est et expedita distinctio.
+        </p>
+        <p>Pellentesque arcu</p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Pellentesque
+          arcu. Et harum quidem rerum facilis est et expedita distinctio.
+        </p>
+      </div>
+
+      {/* ✅ */}
+      <Wrapper>
+        <div>
+          <p>Lorem ipsum</p>
+          <p>Pellentesque arcu</p>
+        </div>
+
+        <p>Lorem ipsum</p>
+        <p>Pellentesque arcu</p>
+      </Wrapper>
+
+      <div>
+        <div>
+          <p>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+            Pellentesque arcu. Et harum quidem rerum facilis est et expedita
+            distinctio.
+          </p>
+
+          <p>Pellentesque arcu</p>
+
+          <p>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+            Pellentesque arcu. Et harum quidem rerum facilis est et expedita
+            distinctio.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 6. Exports
+export { Component };
+export type { ComponentProps };
+```
