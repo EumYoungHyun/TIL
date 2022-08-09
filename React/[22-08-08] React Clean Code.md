@@ -283,7 +283,9 @@ const handleButtonClick = () => {
 
 ### key prop으로 index를 사용하지 않을 것
 
-참고: https://medium.com/wesionary-team/using-index-as-a-key-is-an-anti-pattern-in-react-8e5db3aea3a9
+[Reference]
+1. https://medium.com/wesionary-team/using-index-as-a-key-is-an-anti-pattern-in-react-8e5db3aea3a9    
+2. https://atomizedobjects.com/blog/react/everything-you-need-to-know-about-react-keys/    
 
 ```tsx
 // ❌
@@ -313,6 +315,35 @@ const List = () => {
         return <li key={item.id}>{item.value}</li>;
       })}
     </ul>
+  );
+};
+```
+
+### div대신 fragment를 사용할 것
+
+[Reference]
+1. https://atomizedobjects.com/blog/react/react-fragment/ 
+2. https://atomizedobjects.com/blog/react/react-fragment-vs-div/  
+3. https://atomizedobjects.com/blog/react/what-are-the-differences-between-react-fragment-longhand-vs-shorthand/    
+
+```tsx
+// ❌
+const ActionButtons = ({ text1, text2 }) => {
+  return (
+    <div>
+      <button>{text1}</button>
+      <button>{text2}</button>
+    </div>
+  );
+};
+
+// ✅
+const Button = ({ text1, text2 }) => {
+  return (
+    <>
+      <button>{text1}</button>
+      <button>{text2}</button>
+    </>
   );
 };
 ```
