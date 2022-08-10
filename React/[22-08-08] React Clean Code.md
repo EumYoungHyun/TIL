@@ -448,4 +448,75 @@ const ScreenDimensions = () => {
 };
 ```
 
+### 고차함수로서의 컴포넌트 컨트롤러
+** 고차함수 이용법에 대해 알아볼것
+
+고차 함수로 사용되는 Component에 state나 customhook이 오버로드될 시점에 컨트롤러를 생성해야 합니다.    
+```tsx
+
+// utils/wrap.ts
+import { FC, createElement } from 'react';
+
+export const wrap = <Props extends object, ViewProps extends object>(
+  View: FC<Partial<ViewProps>>,
+  controllers: Array<(props: Props) => Partial<ViewProps> | null | void>
+) => (args: Props) =>
+  createElement(
+    View,
+    ...controllers
+      .map((useController) => useController(args) as Partial<ViewProps> | null)
+      .filter(Boolean)
+  );
+  
+  
+  
+// useTodoControllers.ts
+import { useMemo } from 'react';
+
+import { useTodoList } from '../../adapters/todoAdapter';
+import { useUserData } from '../../adapters/userAdapter';
+
+export const useTodoController = () => {
+  const { user } = useUserData();
+
+  const {
+    todos: { isLoading, data },
+  } = useTodoList(user.id);
+
+  return useMemo(() => ({ isLoading, todos: data }), [isLoading, data]);
+};   
+
+
+
+// TodoList.tsx
+import { useTodoController } from './useTodoController';
+import { TodoItem } from './components/TodoItem';
+
+import { wrap } from '../../utils/wrap';
+
+import { Todo, TodoList as TodoListType } from '../../../domain/struct/todo';
+
+type TodoListProps = {
+  todos: TodoListType;
+  isLoading: boolean;
+};
+
+const TodoListComponent = ({ todos, isLoading }: TodoListProps) => {
+  return isLoading ? (
+    <>Loading...</>
+  ) : (
+    <>
+      <ul className="tasks-list">
+        {todos.map((todo: Todo) => (
+          <TodoItem key={todo.id} todo={todo} />
+        ))}
+      </ul>
+    </>
+  );
+};
+
+export const TodoList = wrap(TodoListComponent, [useTodoController]);
+
+```
+
 
