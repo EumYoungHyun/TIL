@@ -347,3 +347,105 @@ const Button = ({ text1, text2 }) => {
   );
 };
 ```
+
+
+### prop을 분해해서 사용
+
+```tsx
+// ❌
+const Button = (props) => {
+  return <button>{props.text}</button>;
+};
+
+// ✅
+const Button = (props) => {
+  const { text } = props;
+
+  return <button>{text}</button>;
+};
+
+// ✅
+const Button = ({ text }) => {
+  return <button>{text}</button>;
+};
+```
+
+--- 
+
+## 관심사 분리
+렌더링과 비즈니스 로직을 분리하면 Component 코드가 더 읽기 쉬워진다.      
+더러운 코드의 경우 여러개의 hook과 useEffect들을 사용해 페이지/화면/컨테이너 Component에 적용시킨다.        
+그러면 최종 코드는 읽을 수 없을 정도로 커지기 시작한다.   
+
+
+### 커스텀 훅    
+
+책임을 분리하려면 useEffect 또는 여러 useStates를 구성 요소에 직접 넣는 대신 custom hook을 생성하는 것이 좋다.
+
+```tsx
+// ❌
+const ScreenDimensions = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+  
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <>
+      <p>Current screen width: {windowSize.width}</p>
+      <p>Current screen height: {windowSize.height}</p>
+    </>
+  );
+};
+
+// ✅
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
+};
+
+const ScreenDimensions = () => {
+  const windowSize = useWindowSize();
+
+  return (
+    <>
+      <p>Current screen width: {windowSize.width}</p>
+      <p>Current screen height: {windowSize.height}</p>
+    </>
+  );
+};
+```
+
+
