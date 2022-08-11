@@ -520,3 +520,57 @@ export const TodoList = wrap(TodoListComponent, [useTodoController]);
 ```
 
 
+### 큰 규모의 컴포넌트 기피
+가능하다면 컴퓨터를 단위별로 최소화 해야한다. 
+조건부 렌더링이나 데이터 컬럼 정의, 많은 커스텀 훅을 사용할 수 있는 경우에 해당한다. 
+
+```tsx
+// ❌
+const SomeSection = ({ isEditable, value }) => {
+  if (isEditable) {
+    return (
+      <Section>
+        <Title>Edit this content</Title>
+        <Content>{value}</Content>
+        <Button>Clear content</Button>
+      </Section>
+    );
+  }
+
+  return (
+    <Section>
+      <Title>Read this content</Title>
+      <Content>{value}</Content>
+    </Section>
+  );
+};
+
+// ✅
+const EditableSection = ({ value }) => {
+  return (
+    <Section>
+      <Title>Edit this content</Title>
+      <Content>{value}</Content>
+      <Button>Clear content</Button>
+    </Section>
+  );
+};
+
+const DetailSection = ({ value }) => {
+  return (
+    <Section>
+      <Title>Read this content</Title>
+      <Content>{value}</Content>
+    </Section>
+  );
+};
+
+const SomeSection = ({ isEditable, value }) => {
+  return isEditable ? (
+    <EditableSection value={value} />
+  ) : (
+    <DetailSection value={value} />
+  );
+};
+```
+
