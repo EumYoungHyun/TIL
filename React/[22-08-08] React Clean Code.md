@@ -574,3 +574,41 @@ const SomeSection = ({ isEditable, value }) => {
 };
 ```
 
+### 그룹 값으로 묶일 수 있는 state들은 최대한 묶는다
+
+
+```tsx
+// ❌
+const [username, setUsername] = useState<string>('')
+const [password, setPassword] = useState<string>('')
+
+// ✅
+interface UserInfo {
+  username: string;
+  password: string;
+}
+
+const [user, setUser] = useState<UserInfo>({})
+```
+
+### boolean prop에 한해 축약 표현법을 사용한다.
+ 
+ default는 false로 지정, type은 ?: 지정자로 지정
+```tsx
+// ❌
+<Form hasPadding={true} withError={true} />
+
+// ✅
+<Form hasPadding withError />
+```
+
+### 문자열 prop에는 중괄호 사용을 피한다
+```tsx
+// ❌
+<Title variant={"h1"} value={"Home page"} />
+
+// ✅
+<Title variant="h1" value="Home page" />
+```
+
+
