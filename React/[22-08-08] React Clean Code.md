@@ -243,7 +243,7 @@ export type { ComponentProps };
 
 많은 효용가치가 있는지는 모르겠으나 좀 더 명시적으로 작성할 수 있음
 
-```tsx 
+```tsx
 import React, { PropsWithChildren } from "react";
 
 type ComponentProps = {
@@ -251,7 +251,10 @@ type ComponentProps = {
 };
 
 // ✅
-function Component({ someProperty, children }: PropsWithChildren<ComponentProps>) {
+function Component({
+  someProperty,
+  children,
+}: PropsWithChildren<ComponentProps>) {
   // ...
 }
 ```
@@ -284,8 +287,9 @@ const handleButtonClick = () => {
 ### key prop으로 index를 사용하지 않을 것
 
 [Reference]
-1. https://medium.com/wesionary-team/using-index-as-a-key-is-an-anti-pattern-in-react-8e5db3aea3a9    
-2. https://atomizedobjects.com/blog/react/everything-you-need-to-know-about-react-keys/    
+
+1. https://medium.com/wesionary-team/using-index-as-a-key-is-an-anti-pattern-in-react-8e5db3aea3a9
+2. https://atomizedobjects.com/blog/react/everything-you-need-to-know-about-react-keys/
 
 ```tsx
 // ❌
@@ -306,7 +310,7 @@ const List = () => {
   const list = [
     { id: "111", value: "item1" },
     { id: "222", value: "item2" },
-    { id: "333", value: "item3" }
+    { id: "333", value: "item3" },
   ];
 
   return (
@@ -322,9 +326,10 @@ const List = () => {
 ### div대신 fragment를 사용할 것
 
 [Reference]
-1. https://atomizedobjects.com/blog/react/react-fragment/ 
-2. https://atomizedobjects.com/blog/react/react-fragment-vs-div/  
-3. https://atomizedobjects.com/blog/react/what-are-the-differences-between-react-fragment-longhand-vs-shorthand/    
+
+1. https://atomizedobjects.com/blog/react/react-fragment/
+2. https://atomizedobjects.com/blog/react/react-fragment-vs-div/
+3. https://atomizedobjects.com/blog/react/what-are-the-differences-between-react-fragment-longhand-vs-shorthand/
 
 ```tsx
 // ❌
@@ -348,7 +353,6 @@ const Button = ({ text1, text2 }) => {
 };
 ```
 
-
 ### prop을 분해해서 사용
 
 ```tsx
@@ -370,15 +374,15 @@ const Button = ({ text }) => {
 };
 ```
 
---- 
+---
 
 ## 관심사 분리
-렌더링과 비즈니스 로직을 분리하면 Component 코드가 더 읽기 쉬워진다.      
-더러운 코드의 경우 여러개의 hook과 useEffect들을 사용해 페이지/화면/컨테이너 Component에 적용시킨다.        
-그러면 최종 코드는 읽을 수 없을 정도로 커지기 시작한다.   
 
+렌더링과 비즈니스 로직을 분리하면 Component 코드가 더 읽기 쉬워진다.  
+더러운 코드의 경우 여러개의 hook과 useEffect들을 사용해 페이지/화면/컨테이너 Component에 적용시킨다.  
+그러면 최종 코드는 읽을 수 없을 정도로 커지기 시작한다.
 
-### 커스텀 훅    
+### 커스텀 훅
 
 책임을 분리하려면 useEffect 또는 여러 useStates를 구성 요소에 직접 넣는 대신 custom hook을 생성하는 것이 좋다.
 
@@ -387,20 +391,20 @@ const Button = ({ text }) => {
 const ScreenDimensions = () => {
   const [windowSize, setWindowSize] = useState({
     width: undefined,
-    height: undefined
+    height: undefined,
   });
 
   useEffect(() => {
     function handleResize() {
       setWindowSize({
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       });
     }
 
     window.addEventListener("resize", handleResize);
     handleResize();
-  
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -416,14 +420,14 @@ const ScreenDimensions = () => {
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
     width: undefined,
-    height: undefined
+    height: undefined,
   });
 
   useEffect(() => {
     function handleResize() {
       setWindowSize({
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       });
     }
 
@@ -449,32 +453,35 @@ const ScreenDimensions = () => {
 ```
 
 ### 고차함수로서의 컴포넌트 컨트롤러
-** 고차함수 이용법에 대해 알아볼것
 
-고차 함수로 사용되는 Component에 state나 customhook이 오버로드될 시점에 컨트롤러를 생성해야 합니다.    
+\*\* 고차함수 이용법에 대해 알아볼것
+
+고차 함수로 사용되는 Component에 state나 customhook이 오버로드될 시점에 컨트롤러를 생성해야 합니다.
+
 ```tsx
-
 // utils/wrap.ts
-import { FC, createElement } from 'react';
+import { FC, createElement } from "react";
 
-export const wrap = <Props extends object, ViewProps extends object>(
-  View: FC<Partial<ViewProps>>,
-  controllers: Array<(props: Props) => Partial<ViewProps> | null | void>
-) => (args: Props) =>
-  createElement(
-    View,
-    ...controllers
-      .map((useController) => useController(args) as Partial<ViewProps> | null)
-      .filter(Boolean)
-  );
-  
-  
-  
+export const wrap =
+  <Props extends object, ViewProps extends object>(
+    View: FC<Partial<ViewProps>>,
+    controllers: Array<(props: Props) => Partial<ViewProps> | null | void>
+  ) =>
+  (args: Props) =>
+    createElement(
+      View,
+      ...controllers
+        .map(
+          (useController) => useController(args) as Partial<ViewProps> | null
+        )
+        .filter(Boolean)
+    );
+
 // useTodoControllers.ts
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useTodoList } from '../../adapters/todoAdapter';
-import { useUserData } from '../../adapters/userAdapter';
+import { useTodoList } from "../../adapters/todoAdapter";
+import { useUserData } from "../../adapters/userAdapter";
 
 export const useTodoController = () => {
   const { user } = useUserData();
@@ -484,17 +491,15 @@ export const useTodoController = () => {
   } = useTodoList(user.id);
 
   return useMemo(() => ({ isLoading, todos: data }), [isLoading, data]);
-};   
-
-
+};
 
 // TodoList.tsx
-import { useTodoController } from './useTodoController';
-import { TodoItem } from './components/TodoItem';
+import { useTodoController } from "./useTodoController";
+import { TodoItem } from "./components/TodoItem";
 
-import { wrap } from '../../utils/wrap';
+import { wrap } from "../../utils/wrap";
 
-import { Todo, TodoList as TodoListType } from '../../../domain/struct/todo';
+import { Todo, TodoList as TodoListType } from "../../../domain/struct/todo";
 
 type TodoListProps = {
   todos: TodoListType;
@@ -516,13 +521,12 @@ const TodoListComponent = ({ todos, isLoading }: TodoListProps) => {
 };
 
 export const TodoList = wrap(TodoListComponent, [useTodoController]);
-
 ```
 
-
 ### 큰 규모의 컴포넌트 기피
-가능하다면 컴퓨터를 단위별로 최소화 해야한다. 
-조건부 렌더링이나 데이터 컬럼 정의, 많은 커스텀 훅을 사용할 수 있는 경우에 해당한다. 
+
+가능하다면 컴퓨터를 단위별로 최소화 해야한다.
+조건부 렌더링이나 데이터 컬럼 정의, 많은 커스텀 훅을 사용할 수 있는 경우에 해당한다.
 
 ```tsx
 // ❌
@@ -576,11 +580,10 @@ const SomeSection = ({ isEditable, value }) => {
 
 ### 그룹 값으로 묶일 수 있는 state들은 최대한 묶는다
 
-
 ```tsx
 // ❌
-const [username, setUsername] = useState<string>('')
-const [password, setPassword] = useState<string>('')
+const [username, setUsername] = useState<string>("");
+const [password, setPassword] = useState<string>("");
 
 // ✅
 interface UserInfo {
@@ -588,12 +591,13 @@ interface UserInfo {
   password: string;
 }
 
-const [user, setUser] = useState<UserInfo>({})
+const [user, setUser] = useState<UserInfo>({});
 ```
 
 ### boolean prop에 한해 축약 표현법을 사용한다.
- 
- default는 false로 지정, type은 ?: 지정자로 지정
+
+default는 false로 지정, type은 ?: 지정자로 지정
+
 ```tsx
 // ❌
 <Form hasPadding={true} withError={true} />
@@ -603,6 +607,7 @@ const [user, setUser] = useState<UserInfo>({})
 ```
 
 ### 문자열 prop에는 중괄호 사용을 피한다
+
 ```tsx
 // ❌
 <Title variant={"h1"} value={"Home page"} />
@@ -611,4 +616,144 @@ const [user, setUser] = useState<UserInfo>({})
 <Title variant="h1" value="Home page" />
 ```
 
+### inline-style 기피
 
+CSS 모듈, JSS, tailwind, styled-components 등과 같은 서드파티를 사용하거나 사용자 지정 후크를 만드는 것이 좋다.
+
+```tsx
+// ❌
+const Title = (props) => {
+  return (
+    <h1 style={{ fontWeight: 600, fontSize: "24px" }} {...props}>
+      {children}
+    </h1>
+  );
+};
+
+// ✅
+const useStyles = (props) => {
+  return useMemo(
+    () => ({
+      header: { fontWeight: props.isBold ? 700 : 400, fontSize: "24px" },
+    }),
+    [props]
+  );
+};
+
+const Title = (props) => {
+  const styles = useStyles(props);
+
+  return (
+    <h1 style={styles.header} {...props}>
+      {children}
+    </h1>
+  );
+};
+```
+
+### 이중연산자를 이용한 조건부 렌더링 사용
+
+```tsx
+const { role } = user;
+
+// ❌
+if (role === ADMIN) {
+  return <AdminUser />;
+} else {
+  return <NormalUser />;
+}
+
+// ✅
+return role === ADMIN ? <AdminUser /> : <NormalUser />;
+```
+
+### string 사용시 enum 단위로 작성
+
+```tsx
+// ❌
+if (role === "admin") {
+  return <AdminUser />;
+}
+
+// ✅
+enum Roles {
+  admin = "admin",
+  basic = "basic",
+}
+
+if (role === Roles.admin) {
+  return <AdminUser />;
+}
+```
+
+### type의 별칭 사용
+
+```tsx
+export type TodoId = number;
+export type UserId = number;
+
+export interface Todo {
+  id: TodoId;
+  name: string;
+  completed: boolean;
+  userId: UserId;
+}
+
+export type TodoList = Todo[];
+```
+
+### 서드파티 라이브러리의 직접적인 사용 기피
+
+서드파티 라이브러리를 직접적으로 사용하기 보다는
+중앙 집적화된 곳에서 다시 내보내는 형태로 사용
+
+```tsx
+// src/lib/store.ts
+export { useDispatch, useSelector } from "react-redux";
+
+//src/lib/query.ts
+export { useQuery, useMutation, useQueryClient } from "react-query";
+```
+
+### 직접적인 구현보다 추상화에 의존하도록 작성
+
+```tsx
+// ❌ 서드파티 라이브러리의 직접적인 사용 기피
+import moment from "moment";
+
+const updateProduct = (product) => {
+  const payload = {
+    ...product,
+    // ❌ mement의 interface가 실행되는 순간에 묶여있는 코드
+    updatedAt: moment().toDate(),
+  };
+
+  return await fetch(`/product/${product.id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+
+// ✅ helper function 처럼 함수 기능 밖에서 돕도록 추상화 레벨을 만들어야 한다.
+
+// utils/createDate.ts
+import moment from "moment";
+
+export const createDate = (): Date => moment().toDate();
+
+// updateProduct.ts
+import { createDate } from "./utils/createDate";
+
+const updateProduct = (product) => {
+  const payload = {
+    ...product,
+    // ✅ using the abstracted helper function
+    updatedAt: createDate(),
+  };
+
+  return await fetch(`/product/${product.id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+```
