@@ -839,3 +839,25 @@ return (
   </>
 );
 ```
+
+### 문자열 템플릿 사용
+
+```tsx
+// ❌
+const userName = user.firstName + " " + user.lastName;
+
+// ✅
+const userDetails = `${user.firstName} ${user.lastName}`;
+```
+
+### 작은 함수에서 암시적 리턴
+
+```tsx
+// ❌
+const add = (a, b) => {
+  return a + b;
+};
+
+// ✅
+const add = (a, b) => a + b;
+```
