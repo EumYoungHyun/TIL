@@ -757,3 +757,85 @@ const updateProduct = (product) => {
   });
 };
 ```
+
+### 선언적 프로그래밍 (declarative programming)
+
+```
+// ❌ 명령형 프로그래밍: 배열을 for문 안에서 처리되도록 작성.
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let sum = 0;
+
+for (let i = 0; i < arr.length; i++) {
+  sum += arr[i];
+}
+
+// ✅ 선언적 프로그래밍: 각 아이템을 따로 처리할 필요가 없음.
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const sum = arr.reduce((acc, v) => acc + v, 0);
+```
+
+### 서술적 면수명
+
+```tsx
+// ❌ 한글자 변수명 기피
+const n = "Max";
+// ✅
+const name = "Max";
+
+// ❌ 줄임말 기피
+const sof = "Sunday";
+// ✅
+const startOfWeek = "Sunday";
+
+// ❌ 의미없는 이름 기피
+const foo = false;
+// ✅
+const appInit = false;
+```
+
+### 많은 수의 파라미터 기피
+
+기존의 클린코드 책에서는 lat, lon처럼 당연히 따라오는 변수를 제외하고는 2개 이상의 파라미터를 주의하고, 3개 이상부터는 거의 금기시 하였다.  
+많은 수의 파라미터가 필요할때는 객체로서 관리하여, 왜 이 파라미터들이 필요한지, 순서에 맞게 잘 들어가는지를 체크해볼 필요가 있다.
+
+```tsx
+// ❌
+function createPerson(firstName, lastName, height, weight, gender) {
+  // ...
+}
+
+// ✅
+function createPerson({ firstName, lastName, height, weight, gender }) {
+  // ...
+}
+
+// ✅
+function createPerson(person) {
+  const { firstName, lastName, height, weight, gender } = person;
+  // ...
+}
+```
+
+### object 최대한 분리해서 사용
+
+```tsx
+// ❌
+return (
+  <>
+    <div> {user.name} </div>
+    <div> {user.age} </div>
+    <div> {user.profession} </div>
+  </>
+);
+
+// ✅
+const { name, age, profession } = user;
+
+return (
+  <>
+    <div> {name} </div>
+    <div> {age} </div>
+    <div> {profession} </div>
+  </>
+);
+```
