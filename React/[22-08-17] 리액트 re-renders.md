@@ -16,6 +16,69 @@ React의 렌더링 주기를 이해하지 못하면, useMemo와 useCallback등�
 이 튜토리얼에서는 React의 re-render 타이밍과 이유에 대한 멘탈모델을 구축하고,   
 React devtools를 사용하여 특정 component가 다시 리랜더링된 이유를 설명하는 방법에 대해 알아볼 예정입니다.    
 
-> 이 튜토리얼은 리액트의 초급을 넘은 개발자를 대상으로 합니다.
+> 이 튜토리얼은 리액트의 초급을 넘은 개발자를 대상으로 합니다.      
 > 리액트의 기초지식이 부족한 개발자라면 이 페이지를 즐겨찾기 해 놓고 다음에 다시 방문해주세요!
+
+---   
+
+### The Core React Loop
+    
+기초적인 지식으로 이 글을 시작합니다.    
+React의 모든 re-rendering은 state의 변화에서 시작됩니다.   
+React에서 Component를 re-render시키는 유일한 트리거는 State입니다.     
+
+이런 질문이 생길지 모르겠습니다.    
+'props값이 변할떄도, context가 변할때도 Component가 re-render되는것 아닌가요?'        
+
+여기서 말하는 state의 변화란 가장 최상위 부모 Component가 가진 state의 변동을 의미합니다.   
+예를 들어보죠.   
+
+
+
+```jsx
+import React from 'react';
+
+function App() {
+  return (
+    <>
+      <Counter />
+      <footer>
+        <p>Copyright 2022 Big Count Inc.</p>
+      </footer>
+    </>
+  );
+}
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+  
+  return (
+    <main>
+      <BigCountNumber count={count} />
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </main>
+  );
+}
+
+function BigCountNumber({ count }) {
+  return (
+    <p>
+      <span className="prefix">Count:</span>
+      {count}
+    </p>
+  );
+}
+
+export default App;
+```
+
+이 예시에는 3개의 Component(App, Counter, BigCounter)가 존재합니다.       
+React에서는 모든 state 변수는 특정 component의 instance로 연결됩니다.       
+이 예시에서는, Counter라는 컴포넌트 안에 count라는 하나의 state를 가지고 있죠.      
+state(count)가 변할때마다, Counter 컴포넌트는 re-render됩니다.     
+그리고 Counter가 re-render됨에 따라 BigCountNumber 컴포넌트도 re-rendering 될 것 입니다.     
+
+아래에는 increment라는 버튼을 누를때 어떻게 작동하는지에 대한 그림입니다.    
 
