@@ -82,3 +82,6 @@ state(count)가 변할때마다, Counter 컴포넌트는 re-render됩니다.
 
 아래에는 increment라는 버튼을 누를때 어떻게 작동하는지에 대한 그림입니다.    
 
+![Counter re-rendering](https://eumericano.s3.ap-northeast-2.amazonaws.com/dev/re-render/counter1.jpg "Counter re-rendering")
+
+
